@@ -32,4 +32,5 @@ frontend/*.sw?
 .env
 notes.txt
 README.md
+.vscode
 
