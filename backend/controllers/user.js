@@ -2,9 +2,11 @@ const User = require('../models/User');
 const cloudinary = require('../middleware/cloudinary');
 
 module.exports = {
+  
+  // Get user data
   getUserData: async (req, res) => {
     try {
-      const supabaseUserId = req.supabaseUserId; // Extract the Supabase User ID from the JWT
+      const { supabaseUserId } = req; // Destructure Supabase User ID from JWT
 
       // Find the user in the database
       const user = await User.findOne({ supabaseUserId }).select('username profilePicture supabaseUserId');
@@ -26,10 +28,12 @@ module.exports = {
       });
     }
   },
+
+  // Update user profile picture
   updateProfilePicture: async (req, res) => {
     try {
-      const supabaseUserId = req.supabaseUserId; // Extract the Supabase User ID from the JWT
-      const file = req.file; // Extract the uploaded file from Multer middleware
+      const { supabaseUserId } = req; // Destructure Supabase User ID from JWT
+      const { file } = req; // Destructure the uploaded file from Multer middleware
 
       if (!file) {
         return res.status(400).json({ error: 'No file uploaded.' });
@@ -48,9 +52,7 @@ module.exports = {
       }
 
       // Upload the new profile picture to Cloudinary
-      const result = await cloudinary.uploader.upload(file.path, {
-        folder: 'easyRecipes',
-      });
+      const result = await cloudinary.uploader.upload(file.path, { folder: 'easyRecipes' });
 
       // Update the user's profile picture and Cloudinary ID
       user.profilePicture = result.secure_url;

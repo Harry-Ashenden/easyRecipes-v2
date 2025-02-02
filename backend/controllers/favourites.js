@@ -1,6 +1,25 @@
 const Favourites = require('../models/Favourites');
 
-module.exports = {   
+module.exports = {
+
+  
+  getFavRecipes: async (req, res) => {
+    const { supabaseUserId } = req.user;  // Destructure the supabaseUserId from req.user
+
+    // Fetch the user's favourite recipes from the database
+    try {
+        const favourites = await Favourites.findOne({ supabaseUserId });
+
+        if (!favourites) {
+            return res.status(404).json({ error: "No favourites found" });
+        }
+
+        return res.status(200).json(favourites.recipes);
+    } catch (error) {
+        console.error("Error fetching favourites:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 
    // Mark a recipe as favourite
    favRecipe: async (req, res) => {

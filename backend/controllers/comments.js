@@ -2,6 +2,25 @@ const Comment = require('../models/Comment');
 const Recipe = require('../models/Recipe');
 
 module.exports = {
+
+  getComments: async (req, res) => {
+    const { recipeId } = req.params; // Extract recipeId from request parameters
+
+    try {
+        // Fetch all comments related to the given recipeId
+        const comments = await Comment.find({ recipeId }).sort({ createdAt: -1 });
+
+        if (!comments.length) {
+            return res.status(404).json({ error: "No comments found for this recipe" });
+        }
+
+        return res.status(200).json(comments);
+    } catch (error) {
+        console.error("Error fetching comments:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
   createComment: async (req, res) => {
     try {
       const { comment, recipeId } = req.body; // Extract comment and recipe ID from request body

@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express()
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require("./config/database");
@@ -34,14 +33,14 @@ app.use('/api/recipes', recipesRoutes);
 app.use('/api/shopping-list', shoppingListRoutes);
 
 // 404 Error Handler
-app.use((req, res, next) => {
+app.use((res) => {
   res.status(404).json({
     error: 'Route not found',
   });
 });
 
 // Global Error Handler
-app.use((err, req, res, next) => {
+app.use((err, res) => {
   console.error('Error:', err);
   res.status(err.status || 500).json({
     error: err.message || 'Internal Server Error',

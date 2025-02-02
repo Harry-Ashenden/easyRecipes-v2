@@ -2,6 +2,25 @@ const MealPlan = require('../models/MealPlan');
 const Recipe = require('../models/Recipe');
 
 module.exports = {
+
+  getMealPlanner: async (req, res) => {
+    try {
+        const { supabaseUserId } = req; // Extract user ID from token
+
+        // Find the meal planner for the logged-in user
+        const mealPlanner = await MealPlanner.findOne({ supabaseUserId });
+
+        if (!mealPlanner) {
+            return res.status(404).json({ error: "No meal planner found for this user" });
+        }
+
+        res.status(200).json(mealPlanner.mealPlan);
+    } catch (error) {
+        console.error("Error fetching meal planner:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
   addToPlanner: async (req, res) => {
     try {
       const supabaseUserId = req.supabaseUserId; // Supabase User ID from JWT
