@@ -1,7 +1,6 @@
 import { useState } from "react";
-import LoginForm from "../components/LoginForm"; // Import the Login form
-import SignupForm from "../components/SignupForm"; // Import the Signup form
-// import "tailwindcss/tailwind.css"; // Ensure Tailwind is imported
+import LoginForm from "../components/LoginForm";
+import SignupForm from "../components/SignupForm";
 
 const LandingPage = () => {
     const [activeTab, setActiveTab] = useState("Login");
@@ -26,19 +25,19 @@ const LandingPage = () => {
                         name="authTabs"
                         role="tab"
                         className="tab"
-                        aria-label="Signup"
-                        checked={activeTab === "Signup"}
-                        onChange={() => setActiveTab("Signup")}
-                    />
-                    <input
+                        aria-label="Login"
+                        checked={activeTab === "Login"}
+                        onChange={() => setActiveTab("Login")}
+                    /><input
                         type="radio"
                         name="authTabs"
                         role="tab"
                         className="tab"
-                        aria-label="Login"
-                        checked={activeTab === "Login"}
-                        onChange={() => setActiveTab("Login")}
+                        aria-label="Signup"
+                        checked={activeTab === "Signup"}
+                        onChange={() => setActiveTab("Signup")}
                     />
+
                 </div>
 
                 {/* Render the selected component */}

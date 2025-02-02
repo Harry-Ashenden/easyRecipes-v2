@@ -65,7 +65,7 @@ const SignupForm = () => {
                         required
                         placeholder="Username"
                     />
-                    <p className="validator-hint">Must be 3 to 30 characters</p>
+                    <p className="validator-hint hidden">Must be 3 to 30 characters</p>
                 </label>
 
                 {/* Email Input */}
@@ -82,6 +82,7 @@ const SignupForm = () => {
                         required
                         placeholder="mail@site.com"
                     />
+                    <div className="validator-hint hidden">Enter valid email address</div>
                 </label>
 
                 {/* Password Input */}
@@ -97,7 +98,15 @@ const SignupForm = () => {
                         className="input validator"
                         required
                         placeholder="Password"
+                        minLength="8" 
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                     />
+                    <p className="validator-hint hidden">
+                        Must be more than 8 characters, including
+                        <br/>At least one number
+                        <br/>At least one lowercase letter
+                        <br/>At least one uppercase letter
+                    </p>
                 </label>
 
                 {/* Signup Button */}

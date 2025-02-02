@@ -36,17 +36,16 @@ const LoginForm = () => {
             if (error) throw error;
 
             toast.success("Login successful!");
-            console.log("User Data:", data);
 
             // Store token in localStorage/sessionStorage
             if (rememberMe) {
-                localStorage.setItem("supabaseSession", JSON.stringify(data));
+                localStorage.setItem("supabaseToken", JSON.stringify(data.session.access_token));
             } else {
-                sessionStorage.setItem("supabaseSession", JSON.stringify(data));
+                sessionStorage.setItem("supabaseToken", JSON.stringify(data.session.access_token));
             }
 
             // Redirect user (change "/dashboard" to your desired route)
-            window.location.href = "/dashboard";
+            window.location.href = "/profile";
         } catch (error) {
             toast.error(error.message || "Invalid login credentials.");
         } finally {
@@ -78,7 +77,7 @@ const LoginForm = () => {
                         required
                         placeholder="mail@site.com"
                     />
-                    <div className="validator-hint">Enter valid email address</div>
+                    <div className="validator-hint hidden">Enter valid email address</div>
                 </label>
 
                 {/* Password Input */}
