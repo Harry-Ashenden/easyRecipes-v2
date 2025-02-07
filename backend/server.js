@@ -33,7 +33,7 @@ app.use('/api/recipes', recipesRoutes);
 app.use('/api/shopping-list', shoppingListRoutes);
 
 // 404 Error Handler
-app.use((res) => {
+app.use((req, res, next) => {
   res.status(404).json({
     error: 'Route not found',
   });

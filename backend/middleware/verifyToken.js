@@ -7,7 +7,7 @@ const verifyToken = async (req, res, next) => {
     if (!token) return res.status(401).json({ error: 'Unauthorized' });
   
     try {
-      const publicKey = process.env.SUPABASE_API_KEY;
+      const publicKey = process.env.SUPABASE_JWT_SECRET;
       const decoded = jwt.verify(token, publicKey);
       req.supabaseUserId = decoded.sub;
       next();
