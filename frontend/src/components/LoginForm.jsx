@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import supabase from "../utils/supabaseClient";
+import { getToken } from "../utils/getToken"
 
 const LoginForm = () => {
     const [formData, setFormData] = useState({
