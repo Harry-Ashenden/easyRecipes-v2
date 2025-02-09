@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import supabase from "../utils/supabaseClient";
-import { getToken } from "../utils/getToken"
+import { loginUser } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const LoginForm = () => {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-        rememberMe: false,
     });
 
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     // Handle input changes
     const handleChange = (e) => {
@@ -25,28 +26,12 @@ const LoginForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
-        const { email, password, rememberMe } = formData;
+        const { email, password } = formData;
 
         try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
-
-            if (error) throw error;
-
+            await loginUser(email, password);
             toast.success("Login successful!");
-
-            // Store token in localStorage/sessionStorage
-            if (rememberMe) {
-                localStorage.setItem("supabaseToken", JSON.stringify(data.session.access_token));
-            } else {
-                sessionStorage.setItem("supabaseToken", JSON.stringify(data.session.access_token));
-            }
-
-            // Redirect user (change "/dashboard" to your desired route)
-            window.location.href = "/profile";
+            navigate("/profile");
         } catch (error) {
             toast.error(error.message || "Invalid login credentials.");
         } finally {
@@ -85,9 +70,9 @@ const LoginForm = () => {
                 <label className="form-control">
                     <div className="label flex justify-between">
                         <span className="label-text">Password</span>
-                        <a href="/forgot-password" className="label-text link link-accent">
-                            Forgot password?
-                        </a>
+                        <Link to="/forgot-password" className="label-text link link-accent">
+                        Forgot password?
+                        </Link>
                     </div>
                     <input
                         type="password"
@@ -98,20 +83,6 @@ const LoginForm = () => {
                         required
                     />
                 </label>
-
-                {/* Remember Me Checkbox */}
-                <div className="form-control">
-                    <label className="cursor-pointer label self-start gap-2">
-                        <input
-                            type="checkbox"
-                            name="rememberMe"
-                            checked={formData.rememberMe}
-                            onChange={handleChange}
-                            className="checkbox"
-                        />
-                        <span className="label-text">Remember me</span>
-                    </label>
-                </div>
 
                 {/* Log in Button */}
                 <button className="btn btn-primary" type="submit" disabled={loading}>

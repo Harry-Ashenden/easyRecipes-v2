@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import { signUpUser } from "../hooks/useAuth";
 import { toast } from "react-toastify";
-import supabase from "../utils/supabaseClient";
 
 const SignupForm = () => {
     const [formData, setFormData] = useState({
@@ -26,21 +26,11 @@ const SignupForm = () => {
         setLoading(true);
 
         try {
-            // Sign up user with Supabase
-            const { data, error } = await supabase.auth.signUp({
-                email: formData.email,
-                password: formData.password,
-                options: { data: { username: formData.username } },
-            });
-
-            if (error) {
-                throw error;
-            }
-
+            await signUpUser(formData.email, formData.password, formData.username);
             toast.success("Signup successful! Check your email to confirm.");
-            console.log("User Data:", data);
         } catch (error) {
             toast.error(error.message || "Signup failed. Try again.");
+            console.error("Signup Error:", error);
         } finally {
             setLoading(false);
         }
@@ -63,6 +53,7 @@ const SignupForm = () => {
                         onChange={handleChange}
                         className="input validator"
                         required
+                        minLength="3"
                         placeholder="Username"
                     />
                     <p className="validator-hint hidden">Must be 3 to 30 characters</p>

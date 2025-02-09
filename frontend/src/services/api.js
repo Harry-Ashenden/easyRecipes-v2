@@ -1,5 +1,5 @@
-import axiosInstance from "../utils/axiosInstance"; // Import Axios instance
-import { getToken } from "../utils/getToken"; // Import token utility
+import axiosInstance from "./axiosInstance"; // Import Axios instance
+
 
 // Get user data
 export const getUserData = async () => {
