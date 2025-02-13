@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { supabase } from "../services/auth";
+import { supabase } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
 
 const ForgotPasswordPage = () => {

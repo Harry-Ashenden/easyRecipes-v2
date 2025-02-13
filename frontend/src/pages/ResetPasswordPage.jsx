@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { supabase } from "../services/auth";
+import { supabase } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 const ResetPasswordPage = () => {
