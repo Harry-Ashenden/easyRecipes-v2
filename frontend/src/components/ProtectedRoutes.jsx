@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { getCurrentUser } from "../hooks/useAuth";
+import MainLayout from "../layouts/MainLayout";
 
 const ProtectedRoutes = () => {
     const [user, setUser] = useState(null);
@@ -18,7 +19,13 @@ const ProtectedRoutes = () => {
 
     if (loading) return <div>Loading...</div>;
 
-    return user ? <Outlet /> : <Navigate to="/" replace />;
+    return user ? (
+        <MainLayout >
+            <Outlet />
+        </MainLayout>    
+    ) : (
+        <Navigate to="/" replace />
+    );
 };
 
 export default ProtectedRoutes;
