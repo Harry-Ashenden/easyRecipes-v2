@@ -11,6 +11,16 @@ export const getUserData = async () => {
   }
 };
 
+// Get user profile picture
+export const getUserProfilePicture = async () => {
+  try {
+    const response = await axiosInstance.get("/users/profile-picture"); 
+    return response.data.userProfilePicture.profilePicture
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
 // Update profile picture
 export const updateProfilePicture = async (formData) => {
   try {
