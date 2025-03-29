@@ -43,9 +43,14 @@ const RecipeSchema = new mongoose.Schema({
     type: String,
     ref: "supabaseUserId",
   },
+  username: { 
+    type: String, 
+    required: true 
+  },
   profilePicture: {
     type: String,
     ref: "profilePicture",
+    default: "https://res.cloudinary.com/harry-cloud-unique/image/upload/v1736891691/Remy_adbmvr.jpg",
   },
   createdAt: {
     type: Date,

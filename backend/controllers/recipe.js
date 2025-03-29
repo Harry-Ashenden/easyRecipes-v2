@@ -9,27 +9,47 @@ dotenv.config({ path: "./.env" });
 module.exports = {
 
   // Get all public recipes
+  // getAllRecipes: async (req, res) => {
+  //   try {
+  //       const recipes = await Recipe.find(); // Fetch all recipes
+
+  //       // Attach user data manually
+  //       const recipesWithUsers = await Promise.all(
+  //         recipes.map(async (recipe) => {
+  //           const user = await User.findOne({ supabaseUserId: recipe.supabaseUserId }).select("username profilePicture");
+        
+  //           return {
+  //             ...recipe.toObject(),
+  //             user, // Attach user data manually
+  //           };
+  //         })
+  //       );
+        
+  //       res.status(200).json(recipesWithUsers);
+        
+  //   } catch (err) {
+  //     console.error(`Error fetching recipes: ${err.message}`);
+  //     res.status(500).json({ error: 'Server error whilst fetching all recipes' });
+  //   }
+  // },
+
+  // getAllRecipes: async (req, res) => {
+  //   try {
+  //     const recipes = await Recipe.find().populate("user", "username profilePicture"); // Fetch recipes + user details
+  //     res.status(200).json(recipes);
+  //   } catch (err) {
+  //     console.error(`Error fetching recipes: ${err.message}`);
+  //     res.status(500).json({ error: "Server error whilst fetching all recipes" });
+  //   }
+  // },
+
   getAllRecipes: async (req, res) => {
     try {
-        const recipes = await Recipe.find(); // Fetch all recipes
-
-        // Attach user data manually
-        const recipesWithUsers = await Promise.all(
-          recipes.map(async (recipe) => {
-            const user = await User.findOne({ supabaseUserId: recipe.supabaseUserId }).select("username profilePicture");
-        
-            return {
-              ...recipe.toObject(),
-              user, // Attach user data manually
-            };
-          })
-        );
-        
-        res.status(200).json(recipesWithUsers);
-        
-    } catch (err) {
-      console.error(`Error fetching recipes: ${err.message}`);
-      res.status(500).json({ error: 'Server error whilst fetching all recipes' });
+      const recipes = await Recipe.find(); // No need to fetch user separately
+      res.status(200).json(recipes);
+    } catch (error) {
+      console.error("Error fetching recipes:", error);
+      res.status(500).json({ error: "Server error fetching recipes" });
     }
   },
 
@@ -73,6 +93,13 @@ module.exports = {
   createRecipe: async (req, res) => {
     try {
       const { title, servings, prepTime, cookTime, totalTime, ingredients, method, sourceLink, tags } = req.body;
+      const supabaseUserId = req.user.supabaseUserId;
+
+      // Fetch user details
+      const user = await User.findOne({ supabaseUserId });
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
 
       // Split the arrays
       const ingredientsArray = ingredients.split('\n');
@@ -98,6 +125,8 @@ module.exports = {
         ingredients: ingredientsArray,
         method: methodArray,
         userId: req.supabaseUserId,
+        username: user.username,
+        profilePicture: user.profilePicture,
         sourceLink,
         tags: tagsArray,
       });
@@ -116,6 +145,14 @@ module.exports = {
       const { recipeUrl } = req.body; // Destructure recipe URL from the request body
       if (!recipeUrl) {
         return res.status(400).json({ error: 'Recipe URL is required.' });
+      }
+
+      const supabaseUserId = req.user.supabaseUserId;
+
+      // Fetch user details
+      const user = await User.findOne({ supabaseUserId });
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
       }
 
       // Define the recipe API request
@@ -157,6 +194,8 @@ module.exports = {
         ingredients: recipeData.recipeIngredients || [],
         method: recipeData.recipeInstructions || [],
         userId: req.supabaseUserId, // The user's Supabase ID
+        username: user.username,
+        profilePicture: user.profilePicture,
         tags: recipeData.keywords || [], // Optional tags (e.g., keywords from the recipe API)
         sourceLink: recipeUrl,
       });
