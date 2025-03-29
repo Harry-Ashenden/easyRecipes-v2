@@ -87,8 +87,8 @@ const Navbar = () => {
 
                 <ul tabIndex={0} className="dropdown-content menu z-[1] bg-base-200 p-4 rounded-box shadow w-64 gap-2">
                     <li><NavLink to="/my-recipes">My Recipes</NavLink></li>
-                    <li><NavLink to="/profile">Feed</NavLink></li>
-                    <li><NavLink to="/profile">Add Recipe</NavLink></li>
+                    <li><NavLink to="/feed">Feed</NavLink></li>
+                    <li><NavLink to="/add-recipe">Add Recipe</NavLink></li>
                     <li>
                         <h2 className="menu-title"><NavLink to="/profile">Profile</NavLink></h2>
                         <ul>
@@ -107,11 +107,11 @@ const Navbar = () => {
                     My Recipes
                 </NavLink>
 
-                <NavLink to="/profile" className="btn btn-ghost btn-md">
+                <NavLink to="/feed" className="btn btn-ghost btn-md">
                     Feed
                 </NavLink>
 
-                <NavLink to="/profile" className="btn btn-ghost btn-md">
+                <NavLink to="/add-recipe" className="btn btn-ghost btn-md">
                     Add Recipe
                 </NavLink>
 

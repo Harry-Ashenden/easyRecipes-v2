@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { getUserRecipes } from "../services/api"; 
+import { getAllRecipes } from "../services/api"; 
 import RecipeCard from "../components/RecipeCard"; 
 import RECIPE_TAGS from "../constants/tags";
 import TagFilter from "../components/TagFilter";
 
-const MyRecipesPage = () => {
+const RecipeFeedPage = () => {
   const [recipes, setRecipes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
@@ -12,8 +12,8 @@ const MyRecipesPage = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const userRecipes = await getUserRecipes(); 
-        setRecipes(userRecipes);
+        const allRecipes = await getAllRecipes(); // Fetch all recipes from API
+        setRecipes(allRecipes);
       } catch (error) {
         console.error("Error fetching recipes:", error);
       }
@@ -37,7 +37,7 @@ const MyRecipesPage = () => {
 
   return (
     <div className="container mx-auto p-6">
-        <h1>My Recipes</h1>
+        <h1>Feed</h1>
 
       {/* Search Bar */}
         <label className="input mb-2">
@@ -72,4 +72,4 @@ const MyRecipesPage = () => {
   );
 };
 
-export default MyRecipesPage;
+export default RecipeFeedPage;

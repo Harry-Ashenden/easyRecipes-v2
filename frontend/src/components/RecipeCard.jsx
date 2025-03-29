@@ -14,6 +14,30 @@ const RecipeCard = ({ recipe }) => {
       <div className="card-body items-center text-center">
         <h2 className="card-title">{recipe.title}</h2>
       </div>
+
+        {/* Display Tags */}
+        {recipe.tags && recipe.tags.length > 0 && (
+            <div className="card-actions justify-center">
+         {/* <div className="flex flex-wrap gap-2 mt-2"> */}
+            {recipe.tags.map((tag) => (
+              <span key={tag} className="badge badge-soft">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+         {/* User Info (Only for Feed Page) */}
+         {recipe.username && (
+          <div className="flex items-center gap-3 mt-4">
+            <img
+              src={recipe.profilePicture}
+              alt={recipe.username}
+              className="w-10 h-10 rounded-full border"
+            />
+            <span className="font-semibold">{recipe.username}</span>
+          </div>
+        )}
     </div>
   );
 };
