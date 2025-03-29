@@ -5,7 +5,7 @@ import { getUserProfilePicture } from "../services/api";
 import easyRecipesIcon from "../assets/easyRecipes-icon.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faChevronDown, faCircleUser } from "@fortawesome/free-solid-svg-icons";
-import { themeChange } from "theme-change";
+import { toast } from "react-toastify";
 
 
 const Navbar = () => {
@@ -28,6 +28,7 @@ const Navbar = () => {
 
     const handleLogout = async () => {
         await logoutUser();
+        toast.success("Logged out! See you soon", {position: "top-center"});
         navigate("/"); 
     };
 
@@ -85,7 +86,7 @@ const Navbar = () => {
                 </button>
 
                 <ul tabIndex={0} className="dropdown-content menu z-[1] bg-base-200 p-4 rounded-box shadow w-64 gap-2">
-                    <li><NavLink to="/profile">My Recipes</NavLink></li>
+                    <li><NavLink to="/my-recipes">My Recipes</NavLink></li>
                     <li><NavLink to="/profile">Feed</NavLink></li>
                     <li><NavLink to="/profile">Add Recipe</NavLink></li>
                     <li>
@@ -102,7 +103,7 @@ const Navbar = () => {
 
             {/* Desktop Menu */}
             <div className="hidden sm:flex gap-2">
-                <NavLink to="/profile" className="btn btn-ghost btn-md">
+                <NavLink to="/my-recipes" className="btn btn-ghost btn-md">
                     My Recipes
                 </NavLink>
 

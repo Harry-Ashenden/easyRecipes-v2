@@ -6,6 +6,7 @@ import ProfilePage from './pages/ProfilePage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import NotFoundPage from './pages/NotFoundPage';
+import MyRecipesPage from './pages/MyRecipesPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
       {/* Protected Routes */}
       <Route element={<ProtectedRoutes />}>
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/my-recipes" element={<MyRecipesPage />} />
       </Route>
 
       {/* 404 Page */}

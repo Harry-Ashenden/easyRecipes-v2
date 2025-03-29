@@ -34,3 +34,13 @@ export const updateProfilePicture = async (formData) => {
     throw new Error(error.response?.data?.error || error.message);
   }
 };
+
+export const getUserRecipes = async () => {
+  try {
+    const response = await axiosInstance.get("/recipes/user");
+    return response.data.map(({ _id, title, image }) => ({ _id, title, image })); 
+  } catch (error) {
+    console.error("Error fetching user recipes:", error);
+    return [];
+  }
+};

@@ -33,7 +33,7 @@ const LoginForm = () => {
             toast.success("Login successful!");
             navigate("/profile");
         } catch (error) {
-            toast.error(error.message || "Invalid login credentials.");
+            toast.error(error.message || "Invalid login credentials.", {position: "top-center"});
         } finally {
             setLoading(false);
         }
@@ -41,7 +41,7 @@ const LoginForm = () => {
 
     // Handle Biometric Login (Placeholder)
     const handleBiometricLogin = () => {
-        toast.info("Biometric login coming soon!");
+        toast.info("Biometric login coming soon!", {position: "top-center"});
     };
 
     return (

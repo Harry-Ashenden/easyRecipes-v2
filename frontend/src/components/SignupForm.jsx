@@ -27,10 +27,9 @@ const SignupForm = () => {
 
         try {
             await signUpUser(formData.email, formData.password, formData.username);
-            toast.success("Signup successful! Check your email to confirm.");
+            toast.success("Signup successful! Check your email to confirm.", {position: "top-center"});
         } catch (error) {
-            toast.error(error.message || "Signup failed. Try again.");
-            console.error("Signup Error:", error);
+            toast.error(error.message || "Signup failed. Try again.", {position: "top-center"});
         } finally {
             setLoading(false);
         }
