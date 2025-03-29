@@ -6,6 +6,7 @@ const upload = require('../middleware/multer');
 
 // Protected Routes
 router.get('/me', verifyToken, userController.getUserData); // Get user data
+router.get('/profile-picture', verifyToken, userController.getUserProfilePicture) //Get profile picture
 router.put('/profile-picture', verifyToken, upload.single('file'), userController.updateProfilePicture); // Update profile picture
 
 module.exports = router;

@@ -29,6 +29,32 @@ module.exports = {
     }
   },
 
+  // Get user data
+  getUserProfilePicture: async (req, res) => {
+    try {
+      const { supabaseUserId } = req; // Destructure Supabase User ID from JWT
+
+      // Find the user in the database
+      const userProfilePicture = await User.findOne({ supabaseUserId }).select('profilePicture');
+
+      if (!userProfilePicture) {
+        return res.status(404).json({ error: 'User not found.' });
+      }
+
+      // Respond with the user profile picture
+      res.status(200).json({
+        message: 'User profile picture retrieved successfully.',
+        userProfilePicture,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        error: 'An error occurred while retrieving user profile picture.',
+        details: err.message,
+      });
+    }
+  },
+
   // Update user profile picture
   updateProfilePicture: async (req, res) => {
     try {
