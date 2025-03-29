@@ -1,14 +1,14 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-    themes: dark --default, light;
-  }
+  themes: dark --default, light;
+}
 
 /* Move toast container below navbar */
 .Toastify__toast-container--top-right {
   top: 80px !important;
 }
 
-/* Mve toast container to sit just below navbar but full width on mobile */
+/* Move toast container to sit just below navbar but full width on mobile */
 @media only screen and (max-width: 480px) {
   .Toastify__toast-container--top-right {
     top: 72px !important;
