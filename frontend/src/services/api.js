@@ -1,5 +1,6 @@
 import axiosInstance from "./axiosInstance"; // Import Axios instance
 import easyRecipesIcon from "../assets/easyRecipes-icon.png";
+import { supabase } from "../hooks/useAuth";
 
 // Get user data
 export const getUserData = async () => {
@@ -87,14 +88,26 @@ export const deleteRecipeById = async (recipeId) => {
 
 // Edit recipe
 export const updateRecipe = async (recipeId, formData) => {
-  try {
-    const response = await axiosInstance.put(`/recipes/${recipeId}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.error || error.message);
-  }
+  const { data } = await supabase.auth.getSession();
+  const token = data?.session?.access_token;
+
+  return axiosInstance.put(`/recipes/${recipeId}`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+// Manual create recipe
+export const createRecipe = async (formData) => {
+  const { data } = await supabase.auth.getSession();
+  const token = data?.session?.access_token;
+
+  return axiosInstance.post("/recipes", formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
