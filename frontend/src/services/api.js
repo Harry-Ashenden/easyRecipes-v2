@@ -50,7 +50,6 @@ export const getUserRecipes = async () => {
 export const getAllRecipes = async () => {
     try {
       const response = await axiosInstance.get("/recipes");
-      // console.log(response)
       return response.data.map(({ _id, title, image, tags, username, profilePicture }) => ({
         _id,
         title,
@@ -64,3 +63,34 @@ export const getAllRecipes = async () => {
       return [];
     }
 };
+
+// Get individual recipe
+export const getRecipeById = async(recipeId) => {
+  try {
+    const response = await axiosInstance.get(`/recipes/${recipeId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching individual recipes:", error);
+    return [];
+  }
+};
+
+// Delete individual recipe
+export const deleteRecipeById = async (recipeId) => {
+  try {
+    const response = await axiosInstance.delete(`/recipes/${recipeId}`);
+    return response.data; // should return: { message: "Recipe deleted successfully" }
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// export const deleteRecipe = async(recipeId) => {
+//   try{
+//     const response = await axiosInstance.delete(`/recipes/${recipeId}`);
+//   }
+//   const res = await fetch(`/api/recipes/${recipeId}`, {
+//     method: "DELETE",
+//   });
+//   if (!res.ok) throw new Error("Failed to delete recipe");
+// };

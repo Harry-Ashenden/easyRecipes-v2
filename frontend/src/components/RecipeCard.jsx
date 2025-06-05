@@ -18,7 +18,6 @@ const RecipeCard = ({ recipe }) => {
         {/* Display Tags */}
         {recipe.tags && recipe.tags.length > 0 && (
             <div className="card-actions justify-center">
-         {/* <div className="flex flex-wrap gap-2 mt-2"> */}
             {recipe.tags.map((tag) => (
               <span key={tag} className="badge badge-soft">
                 {tag}

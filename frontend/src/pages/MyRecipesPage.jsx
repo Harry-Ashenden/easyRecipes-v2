@@ -3,6 +3,7 @@ import { getUserRecipes } from "../services/api";
 import RecipeCard from "../components/RecipeCard"; 
 import RECIPE_TAGS from "../constants/tags";
 import TagFilter from "../components/TagFilter";
+import CardSkeleton from "../components/CardSkeleton";
 
 const MyRecipesPage = () => {
   const [recipes, setRecipes] = useState([]);
@@ -65,8 +66,18 @@ const MyRecipesPage = () => {
             <RecipeCard key={recipe._id} recipe={recipe} />
           ))
         ) : (
-          <p className="text-gray-500">No recipes found.</p>
-)}
+          <>
+            <div className="pt-10 pl-20">
+              <CardSkeleton />
+            </div>
+            <div className="pt-10 pl-20">
+              <CardSkeleton />
+            </div>
+            <div className="pt-10 pl-20">
+               <CardSkeleton />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

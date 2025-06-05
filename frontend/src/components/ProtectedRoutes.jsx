@@ -17,7 +17,7 @@ const ProtectedRoutes = () => {
         fetchUser();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div className="text-center mt-10"><span className="loading loading-dots loading-lg"></span></div>;
 
     return user ? (
         <MainLayout >
