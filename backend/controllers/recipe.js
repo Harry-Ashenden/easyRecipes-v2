@@ -58,7 +58,6 @@ module.exports = {
     try {
       const { recipeId } = req.params; // Destructure recipe ID from the request parameters
       const recipe = await Recipe.findById(recipeId); // Find the recipe by ID
-      console.log('Fetching recipe with ID:', recipeId);
   
       if (!recipe) return res.status(404).json({ error: 'Recipe not found with that ID' });
   
