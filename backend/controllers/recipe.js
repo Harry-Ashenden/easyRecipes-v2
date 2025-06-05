@@ -92,7 +92,8 @@ module.exports = {
   createRecipe: async (req, res) => {
     try {
       const { title, servings, prepTime, cookTime, totalTime, ingredients, method, sourceLink, tags } = req.body;
-      const supabaseUserId = req.user.supabaseUserId;
+
+      const { supabaseUserId } = req;
 
       // Fetch user details
       const user = await User.findOne({ supabaseUserId });
@@ -108,9 +109,13 @@ module.exports = {
       // Handle image upload to Cloudinary
       let imageUrl, cloudinaryId;
       if (req.file) {
+        // Upload image to Cloudinary as usual
         const uploadResult = await cloudinary.uploader.upload(req.file.path, { folder: 'easyRecipes' });
         imageUrl = uploadResult.secure_url;
         cloudinaryId = uploadResult.public_id;
+      } else if (req.body.defaultImage) {
+        // Use default image URL if no file uploaded
+        imageUrl = req.body.defaultImage;
       }
 
       const newRecipe = new Recipe({
@@ -123,7 +128,7 @@ module.exports = {
         totalTime,
         ingredients: ingredientsArray,
         method: methodArray,
-        userId: req.supabaseUserId,
+        supabaseUserId: req.supabaseUserId,
         username: user.username,
         profilePicture: user.profilePicture,
         sourceLink,
@@ -192,7 +197,7 @@ module.exports = {
         totalTime: recipeData.totalTime || null,
         ingredients: recipeData.recipeIngredients || [],
         method: recipeData.recipeInstructions || [],
-        userId: req.supabaseUserId, // The user's Supabase ID
+        supabaseUserId: req.supabaseUserId, // The user's Supabase ID
         username: user.username,
         profilePicture: user.profilePicture,
         tags: recipeData.keywords || [], // Optional tags (e.g., keywords from the recipe API)
@@ -233,7 +238,11 @@ module.exports = {
         return res.status(404).json({ error: 'Recipe not found.' });
       }
 
-      if (recipe.userId.toString() !== req.supabaseUserId) {
+      if (!recipe.supabaseUserId) {
+        return res.status(404).json({ error: 'Missing owner info' });
+      }
+
+      if (recipe.supabaseUserId !== req.supabaseUserId) {
         return res.status(403).json({ error: 'You are not authorized to update this recipe.' });
       }
 
