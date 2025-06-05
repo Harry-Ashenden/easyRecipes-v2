@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import RECIPE_TAGS from "../constants/tags";
+import TagSelector from "../components/TagSelector";
 
 const RecipeUploadForm = () => {
   const [title, setTitle] = useState("");
@@ -19,7 +20,7 @@ const RecipeUploadForm = () => {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("image", image);
-      formData.append("tags", JSON.stringify(selectedTags));
+      formData.append("tags", selectedTags.join("\n"));
 
       const response = await axios.post("/api/recipes", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -56,23 +57,7 @@ const RecipeUploadForm = () => {
         />
       </div>
 
-      <div className="mt-4">
-        <label className="block text-lg font-medium">Tags</label>
-        <div className="flex flex-wrap gap-2 mt-2">
-          {RECIPE_TAGS.map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              className={`badge p-2 cursor-pointer ${
-                selectedTags.includes(tag) ? "badge-primary" : "badge-soft"
-              }`}
-              onClick={() => handleTagChange(tag)}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-      </div>
+      <TagSelector selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
 
       <button type="submit" className="btn btn-primary mt-4 w-full">
         Upload Recipe

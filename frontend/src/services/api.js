@@ -85,12 +85,16 @@ export const deleteRecipeById = async (recipeId) => {
   }
 };
 
-// export const deleteRecipe = async(recipeId) => {
-//   try{
-//     const response = await axiosInstance.delete(`/recipes/${recipeId}`);
-//   }
-//   const res = await fetch(`/api/recipes/${recipeId}`, {
-//     method: "DELETE",
-//   });
-//   if (!res.ok) throw new Error("Failed to delete recipe");
-// };
+// Edit recipe
+export const updateRecipe = async (recipeId, formData) => {
+  try {
+    const response = await axiosInstance.put(`/recipes/${recipeId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};

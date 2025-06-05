@@ -145,11 +145,19 @@ const RecipePage = () => {
       {isOwner && (
         <div className="mt-10 flex justify-end gap-4">
           <button
+            className="btn btn-success"
+            onClick={() => navigate(`/recipe/${recipeId}/edit`)}
+          >
+            Edit Recipe
+          </button>
+          <button
             className="btn btn-error"
             onClick={() => document.getElementById("confirmDeleteModal").showModal()}
           >
             Delete Recipe
-          </button>
+          </button>          
+          
+
         </div>
       )}
 
@@ -170,6 +178,8 @@ const RecipePage = () => {
           </div>
         </div>
       </dialog>
+
+
 
     </div>
   );
