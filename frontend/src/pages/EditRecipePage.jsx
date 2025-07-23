@@ -54,15 +54,10 @@ const EditRecipePage = () => {
     }
   };
 
-  const handleTagChange = (tag) => {
-  setSelectedTags((prev) =>
-    prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-  );
-};
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     const formData = new FormData();
     formData.append("title", form.title);
     formData.append("servings", form.servings);
@@ -81,10 +76,10 @@ const EditRecipePage = () => {
       navigate(`/recipe/${recipeId}`);
     } catch (err) {
       console.error("Error updating recipe:", err);
+    } finally {
+      setLoading(false);
     }
   };
-
-  if (loading) return <div className="text-center mt-10">Loading...</div>;
 
   return (
     <div className="container mx-auto p-4">
@@ -103,7 +98,21 @@ const EditRecipePage = () => {
 
         <TagSelector selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
 
-        <button type="submit" className="btn btn-primary w-full">Update Recipe</button>
+        {/* <button type="submit" className="btn btn-primary w-full">Update Recipe</button> */}
+
+        <button
+          type="submit"
+          className="btn btn-primary w-full"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <span className="loading loading-dots mr-2"></span>
+            </>
+          ) : (
+            "Update Recipe"
+          )}
+        </button>
       </form>
     </div>
   );

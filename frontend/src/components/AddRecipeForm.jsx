@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { createRecipe } from "../services/api";
 import TagSelector from "../components/TagSelector";
 
 const AddRecipeForm = () => {
+  const navigate = useNavigate();
+  const DEFAULT_IMAGE_URL = "https://res.cloudinary.com/harry-cloud-unique/image/upload/v1749131360/easyRecipes/remy-making-omlette_pubwmw.jpg";
+    const [loading, setLoading] = useState(false);
+
   const [title, setTitle] = useState("");
   const [servings, setServings] = useState("");
   const [prepTime, setPrepTime] = useState("");
@@ -14,10 +18,10 @@ const AddRecipeForm = () => {
   const [sourceLink, setSourceLink] = useState("");
   const [image, setImage] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
-  const DEFAULT_IMAGE_URL = "https://res.cloudinary.com/harry-cloud-unique/image/upload/v1749131360/easyRecipes/remy-making-omlette_pubwmw.jpg";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const formData = new FormData();
@@ -37,19 +41,17 @@ const AddRecipeForm = () => {
        formData.append("defaultImage", DEFAULT_IMAGE_URL); // default image URL
       }
 
-      const recipe = await createRecipe(formData);
-
-      console.log("Recipe uploaded successfully:", recipe);
-
-
+      await createRecipe(formData);
+      navigate(`/my-recipes`);
     } catch (error) {
       console.error("Error creating recipe:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="container mx-auto p-6 max-w-3xl">
-      <h1 className="text-2xl font-bold mb-6">Add a New Recipe</h1>
       <form onSubmit={handleSubmit} className="shadow-md rounded p-6 space-y-4">
         {/* Title */}
         <div>
@@ -163,8 +165,22 @@ const AddRecipeForm = () => {
         {/* Tags */}
         <TagSelector selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
 
-        <button type="submit" className="btn btn-primary w-full mt-6">
+        {/* <button type="submit" className="btn btn-primary w-full mt-6">
           Create Recipe
+        </button> */}
+
+        <button
+          type="submit"
+          className="btn btn-primary w-full mt-6"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <span className="loading loading-dots mr-2"></span>
+            </>
+          ) : (
+            "Create Recipe"
+          )}
         </button>
       </form>
     </div>
