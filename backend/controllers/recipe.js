@@ -151,7 +151,7 @@ module.exports = {
         return res.status(400).json({ error: 'Recipe URL is required.' });
       }
 
-      const supabaseUserId = req.user.supabaseUserId;
+      const { supabaseUserId } = req;
 
       // Fetch user details
       const user = await User.findOne({ supabaseUserId });
@@ -195,12 +195,15 @@ module.exports = {
         prepTime: recipeData.prepTime || null,
         cookTime: recipeData.cookTime || null,
         totalTime: recipeData.totalTime || null,
-        ingredients: recipeData.recipeIngredients || [],
-        method: recipeData.recipeInstructions || [],
+        ingredients: (recipeData.recipeIngredients || []).map(ing =>
+          typeof ing === "string" ? ing : ing.text || ""
+        ),
+        method: (recipeData.recipeInstructions || []).map(step =>
+          typeof step === "string" ? step : step.text || ""
+        ),
         supabaseUserId: req.supabaseUserId, // The user's Supabase ID
         username: user.username,
         profilePicture: user.profilePicture,
-        tags: recipeData.keywords || [], // Optional tags (e.g., keywords from the recipe API)
         sourceLink: recipeUrl,
       });
 

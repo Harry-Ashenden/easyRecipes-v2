@@ -16,19 +16,19 @@ const RecipeSchema = new mongoose.Schema({
     default:"easyRecipes/Ratatouille-with_remy_x45hjy",
   },
   servings: {
-    type: Number,
+    type: String,
     required: false,
   },
   prepTime: {
-    type: Number,
+    type: String,
     required: false,
   },
   cookTime: {
-    type: Number,
+    type: String,
     required: false,
   },
   totalTime: {
-    type: Number,
+    type: String,
     required: false,
   },
   ingredients: {
