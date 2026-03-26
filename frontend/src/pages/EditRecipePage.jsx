@@ -190,7 +190,11 @@ const EditRecipePage = () => {
     formData.append("ingredients", form.ingredients);
     formData.append("method", form.method);
     formData.append("sourceLink", form.sourceLink);
-    formData.append("tags", selectedTags.join("\n"));
+    if (selectedTags.length > 0) {
+      selectedTags.forEach((tag) => formData.append("tags[]", tag)); 
+    } else {
+      formData.append("tags[]", ""); // Append empty value if no tags selected
+    }
     if (form.file) {
       formData.append("file", form.file);
     }
