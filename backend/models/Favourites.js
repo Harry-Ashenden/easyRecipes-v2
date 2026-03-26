@@ -5,10 +5,12 @@ const FavouritesSchema = new mongoose.Schema({
         type: String,
         ref: "supabaseUserId",
     },
-    recipes: {
-        type: [],
-        required: true,
-    }
+    recipes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Recipe",
+        }
+    ]
 });
 
 module.exports = mongoose.model("Favourites", FavouritesSchema);

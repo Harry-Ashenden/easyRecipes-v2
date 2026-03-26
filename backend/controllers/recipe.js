@@ -232,7 +232,7 @@ module.exports = {
   updateRecipe: async (req, res) => {
     try {
       const { recipeId } = req.params; // Destructure recipe ID from URL
-      const { title, servings, prepTime, cookTime, totalTime, ingredients, method, tags } = req.body;
+      const { title, servings, prepTime, cookTime, totalTime, ingredients, method, tags, sourceLink } = req.body;
 
       // Find the recipe to ensure it exists and is owned by the current user
       const recipe = await Recipe.findById(recipeId);
@@ -259,6 +259,7 @@ module.exports = {
         ingredients: ingredients ? ingredients.split('\n') : recipe.ingredients,
         method: method ? method.split('\n') : recipe.method,
         tags: tags ? tags.split('\n') : recipe.tags,
+        sourceLink: sourceLink || recipe.sourceLink
       };
 
       // Handle image replacement if a new image is uploaded
