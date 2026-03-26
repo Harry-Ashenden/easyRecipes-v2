@@ -112,3 +112,40 @@ export const importRecipeFromUrl = async (recipeUrl) => {
   return axiosInstance.post("/recipes/from-url", { recipeUrl });
   
 };
+
+// Get all favourite recipes
+export const getFavouriteRecipes = async () => {
+  try {
+    const response = await axiosInstance.get("/favourites");
+    return response.data.map(({ _id, title, image, tags, username, profilePicture }) => ({
+        _id,
+        title,
+        image,
+        tags,
+        username: username || "Unknown",
+        profilePicture: profilePicture || { easyRecipesIcon },
+      }));
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// Add a recipe to favourites
+export const addFavourite = async (recipeId) => {
+  try {
+    const response = await axiosInstance.put(`/favourites/${recipeId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// Remove a recipe from favourites
+export const removeFavourite = async (recipeId) => {
+  try {
+    const response = await axiosInstance.delete(`/favourites/${recipeId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};

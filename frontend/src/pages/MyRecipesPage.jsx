@@ -1,25 +1,33 @@
 import { useEffect, useState } from "react";
-import { getUserRecipes } from "../services/api"; 
 import RecipeCard from "../components/RecipeCard"; 
 import RECIPE_TAGS from "../constants/tags";
 import TagFilter from "../components/TagFilter";
 import CardSkeleton from "../components/CardSkeleton";
+import { getUserRecipes, getFavouriteRecipes } from "../services/api";
 
 const MyRecipesPage = () => {
   const [recipes, setRecipes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [favouriteIds, setFavouriteIds] = useState([]);
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      try {
-        const userRecipes = await getUserRecipes(); 
-        setRecipes(userRecipes);
-      } catch (error) {
-        console.error("Error fetching recipes:", error);
-      }
-    };
-
+        try {
+            const [userRecipes, favourites] = await Promise.all([
+              getUserRecipes(),
+              getFavouriteRecipes(),
+            ]);
+            setRecipes(userRecipes);
+            setFavouriteIds(favourites.map((recipe) => recipe._id));
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          } finally {
+            setLoading(false);
+          }
+        };
+  
     fetchRecipes();
   }, []);
 
@@ -61,12 +69,8 @@ const MyRecipesPage = () => {
       
       {/* Recipes Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredRecipes.length > 0 ? (
-          filteredRecipes.map((recipe) => (
-            <RecipeCard key={recipe._id} recipe={recipe} />
-          ))
-        ) : (
-          <>
+        {loading ? (
+          <>           
             <div className="pt-10 pl-20">
               <CardSkeleton />
             </div>
@@ -77,6 +81,16 @@ const MyRecipesPage = () => {
                <CardSkeleton />
             </div>
           </>
+        ) : filteredRecipes.length > 0 ? (
+          filteredRecipes.map((recipe) => (
+            <RecipeCard 
+              key={recipe._id} 
+              recipe={recipe}
+              favouriteIds={favouriteIds}
+             />
+          ))
+        ) : (
+           <p className="text-gray-500 col-span-3"> No recipes found.</p>
         )}
       </div>
     </div>

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { deleteRecipeById } from "../services/api";
 import RecipeIngredients from "../components/RecipeIngredients";
 import RecipeMethod from "../components/RecipeMethod"
+import FavouriteButton from "../components/FavouriteButton";
 
 const RecipePage = () => {
   const { recipeId } = useParams();
@@ -56,7 +57,9 @@ const RecipePage = () => {
     <div className="container mx-auto p-4">
       {/* Header */}
       <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold">{recipe.title}</h1>
+        <div className="flex justify-center items-center gap-3">
+          <h1 className="text-3xl font-bold">{recipe.title}</h1>
+        </div>
         <div className="flex justify-center items-center gap-3 mt-2">
           <img
             src={recipe.profilePicture}
@@ -122,11 +125,12 @@ const RecipePage = () => {
         </div> */}
 
       {/* Details */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center text-sm mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 text-center text-sm mb-6">
         <div><strong>Prep Time</strong><br />{recipe.prepTime} mins</div>
         <div><strong>Cook Time</strong><br />{recipe.cookTime} mins</div>
         <div><strong>Total Time</strong><br />{recipe.totalTime} mins</div>
         <div><strong>Servings</strong><br />{recipe.servings}</div>
+        <div><FavouriteButton recipeId={recipeId} /></div>
       </div>
 
       {/* Ingredients Collapse */}

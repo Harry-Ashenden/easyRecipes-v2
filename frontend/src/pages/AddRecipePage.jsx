@@ -47,7 +47,7 @@ const AddRecipePage = () => {
       <div className="text-center mb-6 text-sm text-gray-600">
         {activeTab === "manual"
           ? "Manually fill in your recipe details for full control."
-          : "Paste a recipe URL and we’ll try to import it for you."}
+          : "Paste a recipe URL and we'll try to import it for you."}
       </div>
 
       {/* Conditional Form Rendering */}

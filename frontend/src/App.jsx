@@ -11,6 +11,7 @@ import AddRecipePage from './pages/AddRecipePage';
 import RecipeFeedPage from './pages/RecipeFeedPage';
 import RecipePage from './pages/RecipePage';
 import EditRecipePage from './pages/EditRecipePage';
+import FavouritesPage from './pages/FavouritesPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,6 +29,7 @@ const router = createBrowserRouter(
         <Route path="/feed" element={<RecipeFeedPage />} />
         <Route path="/recipe/:recipeId" element={<RecipePage />} />
         <Route path="/recipe/:recipeId/edit" element={<EditRecipePage />} />
+        <Route path="/favourites" element={<FavouritesPage />} />
       </Route>
 
       {/* 404 Page */}

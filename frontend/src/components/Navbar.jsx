@@ -94,7 +94,7 @@ const Navbar = () => {
                         <ul>
                             <li><NavLink to="/profile">Shopping List</NavLink></li>
                             <li><NavLink to="/profile">Meal Plan</NavLink></li>
-                            <li><NavLink to="/profile">Favourites</NavLink></li>
+                            <li><NavLink to="/favourites">Favourites</NavLink></li>
                         </ul>
                     </li>
                     <button onClick={handleLogout} className="btn btn-primary btn-sm">Logout</button>
@@ -164,7 +164,7 @@ const Navbar = () => {
                         <li><NavLink to="/profile">Profile</NavLink></li>                        
                         <li><NavLink to="/profile">Shopping List</NavLink></li>
                         <li><NavLink to="/profile">Meal Plan</NavLink></li>
-                        <li><NavLink to="/profile">Favourites</NavLink></li>               
+                        <li><NavLink to="/favourites">Favourites</NavLink></li>               
                          <button onClick={handleLogout} className="btn btn-primary btn-sm">Logout</button>
                     </ul>
                 </div>
