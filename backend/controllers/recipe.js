@@ -234,6 +234,8 @@ module.exports = {
       const { recipeId } = req.params; // Destructure recipe ID from URL
       const { title, servings, prepTime, cookTime, totalTime, ingredients, method, tags, sourceLink } = req.body;
 
+      console.log("Update Recipe Request Body:", req.body); // Log the request body for debugging
+
       // Find the recipe to ensure it exists and is owned by the current user
       const recipe = await Recipe.findById(recipeId);
 
@@ -249,6 +251,16 @@ module.exports = {
         return res.status(403).json({ error: 'You are not authorized to update this recipe.' });
       }
 
+      //Check for empty array in tags
+      let parsedTags;
+      if (tags === "") {
+        parsedTags = [];
+      } else if (Array.isArray(tags)) {
+         parsedTags = tags.filter(t => t !== ""); // Filter out empty strings if tags is an array
+      } else {
+        parsedTags = recipe.tags;
+      }
+
       // Prepare data for updating
       const updatedData = {
         title: title || recipe.title,
@@ -258,7 +270,7 @@ module.exports = {
         totalTime: totalTime || recipe.totalTime,
         ingredients: ingredients ? ingredients.split('\n') : recipe.ingredients,
         method: method ? method.split('\n') : recipe.method,
-        tags: tags ? tags.split('\n') : recipe.tags,
+        tags: parsedTags,
         sourceLink: sourceLink ?? recipe.sourceLink
       };
 
