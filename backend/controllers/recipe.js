@@ -259,7 +259,7 @@ module.exports = {
         ingredients: ingredients ? ingredients.split('\n') : recipe.ingredients,
         method: method ? method.split('\n') : recipe.method,
         tags: tags ? tags.split('\n') : recipe.tags,
-        sourceLink: sourceLink || recipe.sourceLink
+        sourceLink: sourceLink ?? recipe.sourceLink
       };
 
       // Handle image replacement if a new image is uploaded
