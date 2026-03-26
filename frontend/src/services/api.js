@@ -149,3 +149,73 @@ export const removeFavourite = async (recipeId) => {
     throw new Error(error.response?.data?.error || error.message);
   }
 };
+
+// Get meal planner
+export const getMealPlanner = async () => {
+  try {
+    const response = await axiosInstance.get("/meal-planner");
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// Add a recipe to meal planner
+export const addToMealPlanner = async (recipeId) => {
+  try {
+    const response = await axiosInstance.post("/meal-planner", { recipeId });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// Clear meal planner
+export const clearMealPlanner = async () => {
+  try {
+    const response = await axiosInstance.delete("/meal-planner/clear");
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// Reorder meal planner
+export const reorderMealPlanner = async (newOrder) => {
+  try {
+    const response = await axiosInstance.put("/meal-planner/reorder", { newOrder });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// Remove a recipe from meal planner
+export const removeFromMealPlanner = async (mealPlanEntryId) => {
+  try {
+    const response = await axiosInstance.delete(`/meal-planner/${mealPlanEntryId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// Toggle recipe completion status in meal planner
+export const toggleRecipeCompletion = async (mealPlanEntryId) => {
+  try {
+    const response = await axiosInstance.patch(`/meal-planner/${mealPlanEntryId}/toggle`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// Update notes for a meal plan entry
+export const updateMealPlanEntryNotes = async (mealPlanEntryId, notes) => {
+  try {
+    const response = await axiosInstance.patch(`/meal-planner/${mealPlanEntryId}/notes`, { notes });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+}

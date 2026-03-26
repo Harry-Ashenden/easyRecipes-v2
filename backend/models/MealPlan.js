@@ -5,10 +5,21 @@ const MealPlanSchema = new mongoose.Schema({
         type: String,
         ref: "supabaseUserId",
     },
-    mealPlan: {
-        type: [],
-        required: true,
-    },
+    mealPlan: [
+        {
+            recipe: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Recipe",
+            },
+            notes: {
+                type: String,
+            },
+            completed: {
+                type: Boolean,
+                default: false,
+            }
+        }
+    ],
     updatedAt: {
         type: Date,
         default: Date.now,
