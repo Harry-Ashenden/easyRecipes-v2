@@ -163,7 +163,7 @@ const Navbar = () => {
                     <ul tabIndex={0} className="dropdown-content menu z-[1] bg-base-200 p-6 rounded-box shadow w-56 gap-2">
                         <li><NavLink to="/profile">Profile</NavLink></li>                        
                         <li><NavLink to="/profile">Shopping List</NavLink></li>
-                        <li><NavLink to="/profile">Meal Plan</NavLink></li>
+                        <li><NavLink to="/meal-plan">Meal Plan</NavLink></li>
                         <li><NavLink to="/favourites">Favourites</NavLink></li>               
                          <button onClick={handleLogout} className="btn btn-primary btn-sm">Logout</button>
                     </ul>

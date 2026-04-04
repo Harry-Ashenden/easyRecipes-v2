@@ -183,7 +183,7 @@ export const clearMealPlanner = async () => {
 // Reorder meal planner
 export const reorderMealPlanner = async (newOrder) => {
   try {
-    const response = await axiosInstance.put("/meal-planner/reorder", { newOrder });
+    const response = await axiosInstance.patch("/meal-planner/reorder", { newOrder });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.error || error.message);
