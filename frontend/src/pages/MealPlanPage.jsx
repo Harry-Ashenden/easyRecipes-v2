@@ -118,9 +118,9 @@ const MealPlanPage = () => {
 
       {loading ? (
         <>
-          <div className=""><MealPlanCardSkeleton /></div>
-          <div className=""><MealPlanCardSkeleton /></div>
-          <div className=""><MealPlanCardSkeleton /></div>
+          <div><MealPlanCardSkeleton /></div>
+          <div><MealPlanCardSkeleton /></div>
+          <div><MealPlanCardSkeleton /></div>
         </>
       ) : mealPlanEntries.length > 0 ? (
         <>

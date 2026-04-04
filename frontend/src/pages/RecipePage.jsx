@@ -7,6 +7,8 @@ import { deleteRecipeById } from "../services/api";
 import RecipeIngredients from "../components/RecipeIngredients";
 import RecipeMethod from "../components/RecipeMethod"
 import FavouriteButton from "../components/FavouriteButton";
+import { addToMealPlanner } from "../services/api";
+import { toast } from "react-toastify";
 
 const RecipePage = () => {
   const { recipeId } = useParams();
@@ -41,14 +43,25 @@ const RecipePage = () => {
   }, [recipeId]);
 
   const handleDelete = async () => {
-  try {
-    await deleteRecipeById(recipeId);
-    navigate("/my-recipes"); // Redirect after successful delete
-  } catch (error) {
-    console.error("Delete failed:", error);
-    // Optional: Show a toast or alert
-  }
-};
+    try {
+      await deleteRecipeById(recipeId);
+      navigate("/my-recipes"); // Redirect after successful delete
+    } catch (error) {
+      console.error("Delete failed:", error);
+      toast.error("Failed to delete recipe.");
+    }
+  };
+
+  const handleAddToPlanner = async () => {
+    try {
+      await addToMealPlanner(recipeId);
+      toast.success("Recipe added to meal planner!");
+    } catch (error) {
+      console.error("Failed to add to meal planner:", error);
+      toast.error("Failed to add recipe to meal planner.");
+    }
+  };
+
 
   if (loading) return <div className="text-center mt-10"><span className="loading loading-dots loading-lg"></span></div>;
   if (!recipe) return <div className="text-center text-red-500 mt-10">Recipe not found</div>;
@@ -125,11 +138,16 @@ const RecipePage = () => {
         </div> */}
 
       {/* Details */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 text-center text-sm mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center text-sm mb-6">
         <div><strong>Prep Time</strong><br />{recipe.prepTime} mins</div>
         <div><strong>Cook Time</strong><br />{recipe.cookTime} mins</div>
         <div><strong>Total Time</strong><br />{recipe.totalTime} mins</div>
         <div><strong>Servings</strong><br />{recipe.servings}</div>
+      </div>
+
+      {/* Actions */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 text-center text-sm mb-6">
+        <button className="btn btn-soft btn-info" onClick={handleAddToPlanner}>Add to Meal Planner</button>
         <div><FavouriteButton recipeId={recipeId} /></div>
       </div>
 
