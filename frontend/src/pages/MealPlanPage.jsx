@@ -9,7 +9,7 @@ import { useSensors, useSensor, MouseSensor, TouchSensor } from '@dnd-kit/core';
 const MealPlanPage = () => {
   const [mealPlanEntries, setMealPlanEntries] = useState([]);
   const [loading, setLoading] = useState(true);
-  const sensors = useSensors(mouseSensor, touchSensor);
+
 
   useEffect(() => {
     const getMealPlanEntries = async () => {
@@ -47,9 +47,10 @@ const MealPlanPage = () => {
     return chunks;
   };
 
+  const sensors = useSensors(mouseSensor, touchSensor);
+
   const weeklyChunks = chunkArray(mealPlanEntries, 7);
 
-  
   const handleRemove = async (_id) => {
       try {
           await removeFromMealPlanner(_id);
