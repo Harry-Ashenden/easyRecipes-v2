@@ -93,7 +93,7 @@ const Navbar = () => {
                         <h2 className="menu-title"><NavLink to="/profile">Profile</NavLink></h2>
                         <ul>
                             <li><NavLink to="/profile">Shopping List</NavLink></li>
-                            <li><NavLink to="/profile">Meal Plan</NavLink></li>
+                            <li><NavLink to="/meal-plan">Meal Plan</NavLink></li>
                             <li><NavLink to="/favourites">Favourites</NavLink></li>
                         </ul>
                     </li>
