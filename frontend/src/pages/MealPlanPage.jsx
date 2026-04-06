@@ -4,10 +4,12 @@ import { getMealPlanner, removeFromMealPlanner, toggleRecipeCompletion, updateMe
 import MealPlanCardSkeleton from '../components/MealPlanCardSkeleton';
 import { DndContext, closestCenter } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { useSensors, useSensor, MouseSensor, TouchSensor } from '@dnd-kit/core';
 
 const MealPlanPage = () => {
   const [mealPlanEntries, setMealPlanEntries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const sensors = useSensors(mouseSensor, touchSensor);
 
   useEffect(() => {
     const getMealPlanEntries = async () => {
@@ -23,6 +25,19 @@ const MealPlanPage = () => {
 
     getMealPlanEntries();
   }, []);
+
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 10,
+    },
+  });
+
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 250,
+      tolerance: 5,
+    },
+  });
 
   const chunkArray = (arr, size) => {
     const chunks = [];
@@ -124,7 +139,7 @@ const MealPlanPage = () => {
         </>
       ) : mealPlanEntries.length > 0 ? (
         <>
-          <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+          <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd} sensors={sensors}>
             <SortableContext items={mealPlanEntries.map(entry => entry._id)} strategy={verticalListSortingStrategy}>
             {weeklyChunks.map((week, weekIndex) => (
               <div key={weekIndex}>
