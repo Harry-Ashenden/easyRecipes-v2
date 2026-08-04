@@ -5,10 +5,24 @@ const ShoppingListSchema = new mongoose.Schema({
         type: String,
         ref: "supabaseUserId",
     },
-    items: {
-        type: [],
-        required: true,
-    },
+    shoppingListItems: [
+        {
+            quantity: {
+                type: Number,
+            },
+            unit: {
+                type: String,
+            },
+            name: {
+                type: String,
+                required: true,
+            },
+            checked: {
+                type: Boolean,
+                default: false,
+            },
+        }
+    ],
     updatedAt: {
         type: Date,
         default: Date.now,

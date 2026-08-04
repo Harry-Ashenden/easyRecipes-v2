@@ -3,63 +3,6 @@ const Recipe = require('../models/Recipe');
 
 module.exports = {
   
-  // Add ingredients to the shopping list
-  addToList: async (req, res) => {
-    try {
-      const { supabaseUserId } = req; // Supabase User ID from JWT
-      const { recipeId } = req.params; // Extract recipe ID from request params
-
-      // Validate inputs
-      if (!recipeId) {
-        return res.status(400).json({ error: 'Recipe ID is required.' });
-      }
-
-      // Find the recipe by ID to get its ingredients
-      const recipe = await Recipe.findById(recipeId);
-      if (!recipe) {
-        return res.status(404).json({ error: 'Recipe not found.' });
-      }
-
-      // Validate that the recipe has ingredients
-      if (!recipe.ingredients || recipe.ingredients.length === 0) {
-        return res.status(400).json({ error: 'Recipe has no ingredients to add to the shopping list.' });
-      }
-
-      // Find the user's shopping list
-      let userShoppingList = await ShoppingList.findOne({ supabaseUserId });
-
-      if (!userShoppingList) {
-        // Create a new shopping list if one doesn't exist
-        userShoppingList = await ShoppingList.create({
-          supabaseUserId,
-          items: recipe.ingredients, // Add the recipe ingredients
-        });
-
-        return res.status(201).json({
-          message: 'Ingredients added to shopping list successfully.',
-          shoppingList: userShoppingList,
-        });
-      } else {
-        // Append the recipe ingredients to the existing shopping list, ensuring no duplicates
-        const newItems = recipe.ingredients.filter(item => !userShoppingList.items.includes(item));
-        userShoppingList.items.push(...newItems);
-        userShoppingList.updatedAt = Date.now();
-        await userShoppingList.save();
-
-        return res.status(200).json({
-          message: 'Ingredients added to shopping list successfully.',
-          shoppingList: userShoppingList,
-        });
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({
-        error: 'An error occurred while adding to the shopping list.',
-        details: err.message,
-      });
-    }
-  },
-
   // Get the user's shopping list
   getShoppingList: async (req, res) => {
     try {
@@ -68,13 +11,12 @@ module.exports = {
       // Find the user's shopping list
       const userShoppingList = await ShoppingList.findOne({ supabaseUserId });
 
+      // Return empty array if no list exists
       if (!userShoppingList) {
-        return res.status(404).json({ error: 'No shopping list found for this user.' });
+        return res.status(200).json({ shoppingListItems: [] });
       }
 
-      res.status(200).json({
-        shoppingList: userShoppingList,
-      });
+      res.status(200).json({ shoppingListItems: userShoppingList.shoppingListItems });
     } catch (err) {
       console.error(err);
       res.status(500).json({
@@ -84,43 +26,210 @@ module.exports = {
     }
   },
 
-  // Update the user's shopping list
-  updateList: async (req, res) => {
+  //Add a manual item to the shopping list
+  addManualItem: async (req, res) => {
     try {
-      const { supabaseUserId } = req; // Supabase User ID from JWT
-      const { shoppingListText } = req.body; // Extract shopping list text from request body
+      const { supabaseUserId } = req;
+      const { name, quantity, unit } = req.body; //get the item details from the request body
 
-      // Validate input
-      if (!shoppingListText || typeof shoppingListText !== 'string' || shoppingListText.trim() === '') {
-        return res.status(400).json({ error: 'Shopping list must be provided as a non-empty text string.' });
+      // Find the user's shopping list
+      const userShoppingList = await ShoppingList.findOne({ supabaseUserId });
+
+      // Create a new shopping list if one doesn't exist
+      if (!userShoppingList) {
+        const newShoppingList = await ShoppingList.create({
+          supabaseUserId,
+          shoppingListItems: [{ name, quantity, unit, checked: false }],
+        });
+      } else {
+        // check if item is currently in shopping list with exact name and unit
+        const existingItem = userShoppingList.shoppingListItems.find(item => item.name === name && item.unit === unit);
+
+        if (existingItem) {
+          existingItem.quantity += quantity;
+        } else {
+          userShoppingList.shoppingListItems.push({ name, quantity, unit, checked: false });
+        }
+
+        await userShoppingList.save();
+
+        res.status(200).json({
+          message: 'Item added to shopping list successfully.',
+          shoppingList: userShoppingList,
+        });
       }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        error: 'An error occurred while adding the item to the shopping list.',
+        details: err.message,
+      });
+    }
+  },
 
-      // Convert the shopping list text into an array by splitting on newlines
-      const shoppingListArray = shoppingListText.split('\n').filter((item) => item.trim() !== '');
-      // Filter removes empty lines (caused by extra newlines)
+  // Add recipe to shopping list
+  addRecipeToShoppingList: async (req, res) => {
+    try {
+      const { supabaseUserId } = req;
+      const { recipeId } = req.params;
+      
+      // check if recipe not found
+      const recipe = await Recipe.findById(recipeId);
+      if (!recipe) {
+        return res.status(404).json({ error: 'Recipe not found.' });
+      }
 
       // Find the user's shopping list
       let userShoppingList = await ShoppingList.findOne({ supabaseUserId });
+
+      // Create a new shopping list if one doesn't exist
+      if (!userShoppingList) {
+        userShoppingList = await ShoppingList.create({
+          supabaseUserId,
+          shoppingListItems: recipe.ingredients.map(ingredient => ({
+            name: ingredient.name,
+            quantity: ingredient.quantity,
+            unit: ingredient.unit,
+            checked: false,
+          })),
+        });
+      } else {
+        // check if item is currently in shopping list with exact name and unit
+        recipe.ingredients.forEach(ingredient => {
+          const existingItem = userShoppingList.shoppingListItems.find(item => item.name === ingredient.name && item.unit === ingredient.unit);
+
+          // if in shopping list add the quantity for a new total
+          if (existingItem) {
+            existingItem.quantity += ingredient.quantity; 
+          } else {
+            userShoppingList.shoppingListItems.push({
+              name: ingredient.name,
+              quantity: ingredient.quantity,
+              unit: ingredient.unit,
+              checked: false,
+            });
+          }
+        });
+
+        await userShoppingList.save();
+      }
+
+      res.status(200).json({
+        message: 'Recipe ingredients added to shopping list successfully.',
+        shoppingList: userShoppingList,
+      });
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        error: 'An error occurred while adding the recipe to the shopping list.',
+        details: err.message,
+      });
+    }
+  },
+
+  // Remove item from shopping list
+  removeItem: async (req, res) => {
+    try {
+      const { supabaseUserId } = req;
+      const { itemId } = req.params; 
+
+      // Find the user's shopping list
+      const userShoppingList = await ShoppingList.findOne({ supabaseUserId });
 
       if (!userShoppingList) {
         return res.status(404).json({ error: 'Shopping list not found for this user.' });
       }
 
-      // Replace the shopping list and update the timestamp
-      userShoppingList.items = shoppingListArray;
-      userShoppingList.updatedAt = Date.now();
+      // remove the item from the shopping list
+      userShoppingList.shoppingListItems = userShoppingList.shoppingListItems.filter(
+        (item) => item._id.toString() !== itemId
+      );
+
       await userShoppingList.save();
 
       res.status(200).json({
-        message: 'Shopping list updated successfully.',
+        message: 'Item removed from shopping list successfully.',
         shoppingList: userShoppingList,
       });
+
     } catch (err) {
       console.error(err);
       res.status(500).json({
-        error: 'An error occurred while updating the shopping list.',
+        error: 'An error occurred while removing the item from the shopping list.',
         details: err.message,
       });
     }
   },
+
+  // Toggle item
+  toggleItem: async (req, res) => {
+    try {
+      const { supabaseUserId } = req;
+      const { itemId } = req.params;
+    
+      // Find the user's shopping list
+      const userShoppingList = await ShoppingList.findOne({ supabaseUserId });
+
+      if (!userShoppingList) {
+        return res.status(404).json({ error: 'Shopping list not found for this user.' });
+      }
+
+      // Find the item in the shopping list
+      const item = userShoppingList.shoppingListItems.id(itemId);
+
+      if (!item) {
+        return res.status(404).json({ error: 'Item not found in the shopping list.' });
+      }
+
+      // Toggle the checked status of the item
+      item.checked = !item.checked;
+      await userShoppingList.save();
+
+      res.status(200).json({
+        message: 'Item toggled successfully.',
+        shoppingList: userShoppingList,
+      });
+    
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        error: 'An error occurred while toggling the item in the shopping list.',
+        details: err.message,
+      });
+    }    
+  },
+
+  // Clear shopping list
+  clearShoppingList: async (req, res) => {
+    try {
+
+      const { supabaseUserId } = req;
+
+      // Find the user's shopping list
+      const userShoppingList = await ShoppingList.findOne({ supabaseUserId });
+
+      if (!userShoppingList) {
+        return res.status(404).json({ error: 'Shopping list not found for this user.' });
+      }
+
+      // Clear the shopping list and update the timestamp
+      userShoppingList.shoppingListItems = [];
+      userShoppingList.updatedAt = Date.now();
+      await userShoppingList.save();
+
+      res.status(200).json({
+        message: 'Shopping list cleared successfully.',
+        shoppingList: userShoppingList,
+      });
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        error: 'An error occurred while clearing the shopping list.',
+        details: err.message,
+      });
+    }
+  },
+
 };
