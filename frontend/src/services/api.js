@@ -219,3 +219,54 @@ export const updateMealPlanEntryNotes = async (mealPlanEntryId, notes) => {
     throw new Error(error.response?.data?.error || error.message);
   }
 }
+
+// Get shopping list
+export const getShoppingList = async () => {
+  try {
+    const response = await axiosInstance.get("/shopping-list");
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// Toggle shopping item checked status
+export const toggleShoppingListItem = async (itemId) => {
+  try {
+    const response = await axiosInstance.patch(`/shopping-list/${itemId}/toggle`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+
+// Remove an item from the shopping list
+export const removeShoppingListItem = async (itemId) => {
+  try {
+    const response = await axiosInstance.delete(`/shopping-list/${itemId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// Clear the entire shopping list
+export const clearShoppingList = async () => {
+  try {
+    const response = await axiosInstance.delete("/shopping-list/clear");
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// Add a manual item to the shopping list
+export const addManualItemToShoppingList = async (itemData) => {
+  try {
+    const response = await axiosInstance.post("/shopping-list/manual", itemData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
