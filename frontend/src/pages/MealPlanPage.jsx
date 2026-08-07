@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import MealPlanCard from '../components/MealPlanCard';
-import { getMealPlanner, removeFromMealPlanner, toggleRecipeCompletion, updateMealPlanEntryNotes, reorderMealPlanner, clearMealPlanner } from '../services/api';
+import { getMealPlanner, removeFromMealPlanner, toggleRecipeCompletion, updateMealPlanEntryNotes, reorderMealPlanner, clearMealPlanner, addRecipeToShoppingList } from '../services/api';
 import MealPlanCardSkeleton from '../components/MealPlanCardSkeleton';
 import { DndContext, closestCenter } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useSensors, useSensor, MouseSensor, TouchSensor } from '@dnd-kit/core';
+import { toast } from 'react-toastify';
 
 const MealPlanPage = () => {
   const [mealPlanEntries, setMealPlanEntries] = useState([]);
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     const getMealPlanEntries = async () => {
@@ -81,6 +81,25 @@ const MealPlanPage = () => {
     }
   };
 
+  const handleAddAllToShoppingList = async () => {
+  try {
+    for (const entry of mealPlanEntries) {
+      try {
+        await addRecipeToShoppingList(entry.recipe._id);
+      } catch (error) {
+        console.error(`Failed to add ${entry.recipe.title}:`, error);
+        toast.error(`Failed to add ${entry.recipe.title} to shopping list.`);
+        return;
+      }
+    }
+    
+    toast.success(`Added all ${mealPlanEntries.length} recipes to shopping list!`);
+  } catch (error) {
+    console.error('Error adding recipes to shopping list:', error);
+    toast.error('Failed to add recipes to shopping list.');
+  }
+};
+
   const onDragEnd = async (event) => {
     const { active, over } = event;
 
@@ -116,6 +135,7 @@ const MealPlanPage = () => {
     <div className="container mx-auto p-6">
       <div className='flex justify-between items-center mb-4'>
         <h1 className="text-2xl font-bold ">My Meal Plan</h1>
+        <button className="btn btn-primary" onClick={handleAddAllToShoppingList}>Add All to Shopping List</button>
         <button className="btn  btn-soft btn-error btn-sm" onClick={() => { document.getElementById('my_modal_5').showModal(); } }>Clear Plan</button>
       </div>
       <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">

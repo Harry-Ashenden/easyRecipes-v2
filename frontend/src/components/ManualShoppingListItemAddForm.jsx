@@ -13,9 +13,9 @@ const ManualShoppingListItemAddForm = ({ onItemAdded }) => {
 
         try {
             const response = await addManualItemToShoppingList({ 
-                name, 
+                name: name.trim(), 
                 quantity: quantity ? parseFloat(quantity) : null,
-                unit
+                unit: unit ? unit.trim() : null
             });
             onItemAdded(response.shoppingList.shoppingListItems);
             setName('');

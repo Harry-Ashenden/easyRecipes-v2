@@ -224,7 +224,7 @@ export const updateMealPlanEntryNotes = async (mealPlanEntryId, notes) => {
 export const getShoppingList = async () => {
   try {
     const response = await axiosInstance.get("/shopping-list");
-    return response.data;
+    return response.data.shoppingListItems;
   } catch (error) {
     throw new Error(error.response?.data?.error || error.message);
   }
@@ -265,6 +265,16 @@ export const clearShoppingList = async () => {
 export const addManualItemToShoppingList = async (itemData) => {
   try {
     const response = await axiosInstance.post("/shopping-list/manual", itemData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
+// Add recipe ingredients to the shopping list
+export const addRecipeToShoppingList = async (recipeId) => {
+  try {
+    const response = await axiosInstance.post(`/shopping-list/recipe/${recipeId}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.error || error.message);

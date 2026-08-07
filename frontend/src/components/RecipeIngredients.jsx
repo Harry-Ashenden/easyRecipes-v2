@@ -4,9 +4,14 @@ const RecipeIngredients = ({ ingredients }) => (
       <div className="collapse-title text-lg font-medium">Ingredients</div>
       <div className="collapse-content">
           <ul className="list-disc list-inside space-y-2">
-              {ingredients.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
+              {ingredients.map((item, index) => {
+                  const { quantity, unit, name } = item;
+                  return (
+                    <li key={index}>
+                      {quantity} {unit && unit} {name}
+                    </li>
+                  );
+              })}
           </ul>
       </div>
     </div>

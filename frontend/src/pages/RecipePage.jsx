@@ -7,7 +7,7 @@ import { deleteRecipeById } from "../services/api";
 import RecipeIngredients from "../components/RecipeIngredients";
 import RecipeMethod from "../components/RecipeMethod"
 import FavouriteButton from "../components/FavouriteButton";
-import { addToMealPlanner } from "../services/api";
+import { addToMealPlanner, addRecipeToShoppingList } from "../services/api";
 import { toast } from "react-toastify";
 
 const RecipePage = () => {
@@ -59,6 +59,16 @@ const RecipePage = () => {
     } catch (error) {
       console.error("Failed to add to meal planner:", error);
       toast.error("Failed to add recipe to meal planner.");
+    }
+  };
+
+  const handleAddToShoppingList = async () => {
+    try {
+      await addRecipeToShoppingList(recipeId);
+      toast.success("Recipe ingredients added to shopping list!");
+    } catch (error) {
+      console.error("Failed to add to shopping list:", error);
+      toast.error("Failed to add recipe ingredients to shopping list.");
     }
   };
 
@@ -146,8 +156,9 @@ const RecipePage = () => {
       </div>
 
       {/* Actions */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 text-center text-sm mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center text-sm mb-6">
         <button className="btn btn-soft btn-info" onClick={handleAddToPlanner}>Add to Meal Planner</button>
+        <button className="btn btn-soft btn-success" onClick={handleAddToShoppingList}>Add Ingredients to Shopping List</button>
         <div><FavouriteButton recipeId={recipeId} /></div>
       </div>
 
