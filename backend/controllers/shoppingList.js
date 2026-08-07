@@ -43,7 +43,9 @@ module.exports = {
         });
       } else {
         // check if item is currently in shopping list with exact name and unit
-        const existingItem = userShoppingList.shoppingListItems.find(item => item.name === name && item.unit === unit);
+        const existingItem = userShoppingList.shoppingListItems.find(
+          item => item.name === name && item.unit === unit && !item.checked
+        );
 
         if (existingItem) {
           existingItem.quantity += quantity;
@@ -96,7 +98,7 @@ module.exports = {
       } else {
         // check if item is currently in shopping list with exact name and unit
         recipe.ingredients.forEach(ingredient => {
-          const existingItem = userShoppingList.shoppingListItems.find(item => item.name === ingredient.name && item.unit === ingredient.unit);
+          const existingItem = userShoppingList.shoppingListItems.find(item => item.name === ingredient.name && item.unit === ingredient.unit && !item.checked);
 
           // if in shopping list add the quantity for a new total
           if (existingItem) {
